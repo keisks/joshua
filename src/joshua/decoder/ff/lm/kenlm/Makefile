@@ -6,11 +6,12 @@ CC = g++
 MAX_ORDER = 9
 
 # Set to the location of your boost libraries
-BOOST_ROOT = /opt/local
+#BOOST_ROOT = /opt/local
+BOOST_ROOT = /usr/local/boost_1_57_0
 
 # Should be set to blank or "-mt", depending on whether you have the boost multithreaded
 # libraries installed
-BOOST_MT = -mt
+#BOOST_MT = -mt
 
 CORE = lm/bhiksha.o lm/binary_format.o lm/config.o lm/lm_exception.o lm/model.o lm/quantize.o lm/read_arpa.o lm/search_hashed.o lm/search_trie.o lm/sizes.o lm/trie.o lm/trie_sort.o lm/value_build.o lm/virtual_interface.o lm/vocab.o util/bit_packing.o util/ersatz_progress.o util/exception.o util/file.o util/file_piece.o util/mmap.o util/murmur_hash.o util/pool.o util/read_compressed.o util/scoped.o util/usage.o util/double-conversion/bignum.o util/double-conversion/bignum-dtoa.o util/double-conversion/cached-powers.o util/double-conversion/diy-fp.o util/double-conversion/double-conversion.o util/double-conversion/fast-dtoa.o util/double-conversion/fixed-dtoa.o util/double-conversion/strtod.o util/parallel_read.o
 
@@ -36,11 +37,11 @@ INSTALL=build_binary ngram_query
 
 #lmplz
 SHELL=bash
-ifeq ($(shell $(CC) -L/opt/local/lib -L$(BOOST_ROOT)/lib -lboost_program_options$(BOOST_MT) -lboost_thread$(BOOST_MT) -x c++ - <<<'int main() {}' -o dummy && rm dummy && echo Boost),Boost)
+ifeq ($(shell $(CC) -L/opt/local/lib -L$(BOOST_ROOT)/lib64 -lboost_program_options$(BOOST_MT) -lboost_thread$(BOOST_MT) -x c++ - <<<'int main() {}' -o dummy && rm dummy && echo Boost),Boost)
   $(info Detected Boost)
 LMPLZ=lm/builder/adjust_counts.o lm/builder/corpus_count.o lm/builder/initial_probabilities.o lm/builder/interpolate.o lm/builder/lmplz_main.o lm/builder/pipeline.o lm/builder/print.o lm/builder/output.o util/stream/chain.o util/stream/io.o util/stream/line_input.o util/stream/multi_progress.o
 lmplz: $(CORE) $(HEADERS) $(LMPLZ)
-	$(CC) $(CPPFLAGS) $(CORE) $(LMPLZ) -o lmplz -L/opt/local/lib -L$(BOOST_ROOT)/lib -lz -lboost_program_options$(BOOST_MT) -lboost_thread$(BOOST_MT) -lboost_system$(BOOST_MT) $(RT) -pthread
+	$(CC) $(CPPFLAGS) $(CORE) $(LMPLZ) -o lmplz -L/opt/local/lib -L$(BOOST_ROOT)/lib64 -lz -lboost_program_options$(BOOST_MT) -lboost_thread$(BOOST_MT) -lboost_system$(BOOST_MT) $(RT) -pthread
 EXES+=lmplz 
 else
   echo "lmplz (used for building language models) failed to build. Is Boost installed?"
